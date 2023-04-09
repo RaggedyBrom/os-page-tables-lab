@@ -443,28 +443,28 @@ void vmprint(pagetable_t pagetable)
 {
   pte_t pte;
 
-  printf("page table %p", &pagetable);
+  printf("page table %p\n", pagetable);
 
   for (int i = 0; i < 512; i++)
   {
     pte = pagetable[i];
     if (pte & PTE_V)
     {
-      printf("..%d: pte %p pa %p", i, pte, PTE2PA(pte));
+      printf("..%d: pte %p pa %p\n", i, pte, PTE2PA(pte));
       
       for (int j = 0; j < 512; j++)
       {
         pte = ((pagetable_t)PTE2PA(pagetable[i]))[j];
         if (pte & PTE_V)
         {
-          printf(".. ..%d: pte %p pa %p", j, pte, PTE2PA(pte));
+          printf(".. ..%d: pte %p pa %p\n", j, pte, PTE2PA(pte));
           
           for (int k = 0; k < 512; k++)
           {
             pte = ((pagetable_t)PTE2PA(((pagetable_t)PTE2PA(pagetable[i]))[j]))[k];
             if (pte & PTE_V)
             {
-              printf(".. .. ..%d: pte %p pa %p", k, pte, PTE2PA(pte));
+              printf(".. .. ..%d: pte %p pa %p\n", k, pte, PTE2PA(pte));
             }
           }
         }
