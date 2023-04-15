@@ -1,0 +1,5 @@
+Speed up system calls                       1.5 hrs
+Print a page table                          1 hr
+Detect which pages have been accessed       1.5 hrs
+-----------------------------------------------------
+Total time                                  4 hrs
