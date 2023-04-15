@@ -75,17 +75,32 @@ int
 sys_pgaccess(void)
 {
   // lab pgtbl: your code here.
-  uint64  pageaddr;
-  uint64  usrbuf;
-  int     len;
-  unsigned int tempbuf;
+  uint64  pageaddr;           // virtual address of the first page to check       
+  uint64  usrbuf;             // userspace buffer to store the bitmask
+  int     len;                // number of pages to check incl. the first one
+  unsigned int tempbuf;       // temp buffer to construct the bitmask
+  pte_t   *pte;               // page table entry corresponding to a va
 
   argaddr(0, &pageaddr);
   argint(1, &len);
   argaddr(2, &usrbuf);
 
-  // TODO: find out which pages have been accessed and construct the bitmask
+  // Find out which pages have been accessed and construct the bitmask
+  tempbuf = 0;
+  for (int i = 0; i < len; i++)   // Iterate through len # of pages
+  {
+    // Find the pte that corresponds to the i'th page's virtual address
+    pte = walk(myproc()->pagetable, pageaddr + (PGSIZE * i), 0);
 
+    // If the pte has the access bit set, set the i'th bit in the bitmask
+    // and then clear the access bit
+    if (*pte & PTE_A)
+    {
+      tempbuf = (1 << i) | tempbuf;
+      *pte = *pte & ~PTE_A;
+    }
+  }
+  
   copyout(myproc()->pagetable, usrbuf, (char *)&tempbuf, sizeof(tempbuf));
   return 0;
 }
