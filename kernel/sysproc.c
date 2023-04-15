@@ -75,6 +75,18 @@ int
 sys_pgaccess(void)
 {
   // lab pgtbl: your code here.
+  uint64  pageaddr;
+  uint64  usrbuf;
+  int     len;
+  unsigned int tempbuf;
+
+  argaddr(0, &pageaddr);
+  argint(1, &len);
+  argaddr(2, &usrbuf);
+
+  // TODO: find out which pages have been accessed and construct the bitmask
+
+  copyout(myproc()->pagetable, usrbuf, (char *)&tempbuf, sizeof(tempbuf));
   return 0;
 }
 #endif
