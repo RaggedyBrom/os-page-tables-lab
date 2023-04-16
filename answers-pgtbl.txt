@@ -1,0 +1,16 @@
+Q: Which other xv6 system call(s) could be made faster using this shared page? Explain how.
+
+A: I think you could speed up any system call where the operating system copies data back out to the user process, because the data being returned
+can be stored directly in the usyscall page rather than having to do the work of an address translation. An example of this
+would be sys_fstat(), where an empty file struct could be added to the usyscall page and filled with data after filestat() gets called, and
+then simply return a value to the user process to signal if the system call was successful or not so it can know if the data in the filestat
+struct is valid.
+
+
+Q: Explain the output of vmprint in terms of Fig 3-4 from the text. What does page 0 contain? What is in page 2?
+When running in user mode, could the process read/write the memory mapped by page 1? What does the third to last page contain?
+
+A: Page 0 contains the text section for the process, and page 2 contains the guard page underneath the stack.
+User mode can read and write (but not execute) to page 1 because the read and write bits are set in the page flags, which makes sense because
+this page contains the data section and needs to be able to read and write, but you shouldn't be allowed to execute data.
+The third to last page contains the usyscall region that we added in the first part of the lab.
